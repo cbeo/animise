@@ -1,7 +1,7 @@
 ;;;; package.lisp
 
 (defpackage #:animise
-  (:use #:cl)
+  (:use #:cl #:lettuce)
   (:export
 
    ;; TWEENS

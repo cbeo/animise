@@ -6,5 +6,6 @@
   :license  "Specify license here"
   :version "0.0.1"
   :serial t
+  :depends-on (#:lettuce)
   :components ((:file "package")
                (:file "animise")))
