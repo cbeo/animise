@@ -22,6 +22,15 @@
                                (- current (+ start (* 0.5 duration))))
                             delta)))))
 
+
+;;; The DEF-EASE macro defines a function. the BODY of the function has the
+;;; following variables available to it:
+;;; START the start time in MS
+;;; DURATION intended duration of this animation
+;;; CURRENT the current time, sometime after START
+;;; DELTA, a number, the total change in the value being animated (e.g. X coordinate)
+;;; FRAC, a number between 0 and 1, the how close to completion this animation is.
+
 (def-ease linear (* delta frac))
 
 (def-mirror-for linear)
@@ -109,16 +118,17 @@
 
 (def-mirror-for bounce-out)
 
-(defun frames (ease-fn &optional (step 0.1))
+
+;;; Some functions to check your intuitions about the output of easing functions
+
+(defun make-frames (ease-fn &optional (step 0.1))
   (loop :for time :from 0 :upto (+ 1 step) :by step
         :collect (funcall ease-fn 0 1.0 time)))
 
 (defun print-frames (fn &key (width 20) (mark #\.) (step 0.1))
-  (loop for frame in (frames fn step) do
+  (loop for frame in (make-frames fn step) do
     (dotimes (x width) (princ #\Space))
     (dotimes (x (round (* frame width)))
       (princ #\Space))
     (princ mark)
     (terpri)))
-
-
