@@ -33,7 +33,7 @@
   ((start-time
     :accessor start-time
     :initarg :start-time
-    :initform (error "Must supply a start time."))
+    :initform 0)
    (duration
     :reader get-duration
     :initarg :duration
@@ -53,9 +53,17 @@
    (rounding
     :initarg rounding
     :initform t )
+   (getter)
+   (setter)
    (accessor
     :initarg :accessor
     :initform (error "Must supply an accessor function"))))
+
+(defmethod initialize-instance :after ((tween tween) &key)
+  (with-slots (getter setter accessor) tween
+    (setf getter (eval `(function ,accessor)))
+    (setf setter (eval `(function (setf ,accessor))))))
+
 
 ;;; TWEEN-SEQ combines tweens to run one after another.
 
@@ -116,10 +124,10 @@
   (get-duration tween))
 
 (defmethod run-tween ((tween tween) time)
-  (with-slots (start-time duration rounding ease-fn start-val target end-val accessor) tween
+  (with-slots (start-time duration rounding ease-fn start-val target end-val getter setter) tween
     (when (>= time start-time)
       (when (null start-val)
-        (setf start-val (funcall accessor target)))
+        (setf start-val (funcall getter target)))
       (let ((new-val
               (+ start-val
                  (funcall ease-fn
@@ -127,7 +135,7 @@
                           duration
                           time
                           (- end-val start-val)))))
-        (funcall (eval `(function (setf ,accessor)))
+        (funcall setter
                  (if rounding (round new-val) new-val)
                  target)))))
 
