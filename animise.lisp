@@ -53,7 +53,6 @@
    (rounding
     :initarg rounding
     :initform t )
-   (getter)
    (setter)
    (accessor
     :initarg :accessor
@@ -61,7 +60,6 @@
 
 (defmethod initialize-instance :after ((tween tween) &key)
   (with-slots (getter setter accessor) tween
-    (setf getter (eval `(function ,accessor)))
     (setf setter (eval `(function (setf ,accessor))))))
 
 
@@ -124,10 +122,10 @@
   (get-duration tween))
 
 (defmethod run-tween ((tween tween) time)
-  (with-slots (start-time duration rounding ease-fn start-val target end-val getter setter) tween
+  (with-slots (start-time duration rounding ease-fn start-val target end-val setter accessor) tween
     (when (>= time start-time)
       (when (null start-val)
-        (setf start-val (funcall getter target)))
+        (setf start-val (funcall accessor target)))
       (let ((new-val
               (+ start-val
                  (funcall ease-fn
