@@ -2,13 +2,25 @@
 
 (defpackage #:animise
   (:use #:cl #:lettuce)
+  (:import-from #:trivia #:match)
   (:export
 
-   ;; TWEENS
+   ;; TWEEN CLASSES
    #:tween
-   #:make-tween
-   #:end-time
+   #:tween-seq
+   #:tween-group
+
+   ;; TWEEN PROTOCOL
+   #:start-time
+   #:duration
+   #:run-tween
+
+   ;; TWEEN FUNCTIONS
    #:tween-finished-p
+   #:in-sequence
+   #:end-time
+   #:add-to-group
+   #:as-group
 
    ;; EASING FUNCTIONS
    #:bouce-out
