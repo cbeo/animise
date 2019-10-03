@@ -35,7 +35,7 @@
     :initarg :start-time
     :initform (error "Must supply a start time."))
    (duration
-    :reader duration
+    :reader get-duration
     :initarg :duration
     :initform 1000.0) ; 1 second
    (ease-fn
@@ -43,7 +43,7 @@
     :initform #'linear)
    (start-val
     :accessor start-val
-    :initarg start-val
+    :initarg :start-val
     :initform (error "Must supply a start value."))
    (end-val
     :accessor end-val
@@ -108,12 +108,15 @@
 
 ;;; Interface implementations for TWEEN class
 
+(defmethod duration ((tween tween))
+  (get-duration tween))
+
 (defmethod run-tween ((tween tween) time)
-  (with-slots (start-time duration ease start-val end-val effector) tween
+  (with-slots (start-time duration ease-fn start-val end-val effector) tween
     (when (>= time start-time)
       (funcall effector
                (+ start-val
-                  (funcall ease
+                  (funcall ease-fn
                            start-time
                            duration
                            time
@@ -155,18 +158,18 @@
       (nil
        (reduce #'+ tweens :key #'duration :initial-value 0)))))
 
-(defun reset-child-loops (seq)
+(defun reset-child-loops (seq &optional reset-parent)
   ;; Resets LOOP-MODEs that have counts to whatever their initial count was.
   ;; Does the same for all tweens in the sequence that might themselves be
   ;; TWEEN-SEQ instances
   (dolist (sub (tweens seq))
-    (when (typep sub tween-seq)
+    (when (typep sub 'tween-seq)
       (reset-child-loops seq)))
-
-  (with-slots (loop-mode) seq
-    (when (consp loop-mode)
-      (setf (nth 2 loop-mode)
-            (nth 1 loop-mode)))))
+  (when reset-parent
+    (with-slots (loop-mode) seq
+      (when (consp loop-mode)
+        (setf (nth 2 loop-mode)
+              (nth 1 loop-mode))))))
 
 ;; TODO implmeent the reflecting tween behavior
 (defun apply-looping (seq now)
@@ -178,7 +181,7 @@
       (:looping
        ;; If you're simply looping, you need to make sure each non-infinite subloop
        ;; be reset.
-       (reset-child-loops seq)
+       (reset-child-loops seq t)
        ;; then set the start time to right now and correct start times of the
        ;; subsequent loops
        (setf (start-time seq) now)
@@ -222,7 +225,7 @@
 (defmethod (setf start-time) (val (ob tween-group))
   (unless (members ob) (error "Can't setf the start time on an empty group"))
   (let* ((old-start-time (start-time ob))
-         (offset (- now old-start-time)))
+         (offset (- val old-start-time)))
     (dolist (tween (members ob))
       (incf (start-time tween) offset))
     val))
