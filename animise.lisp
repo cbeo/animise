@@ -42,16 +42,20 @@
     :initarg :ease-fn
     :initform #'linear)
    (start-val
-    :accessor start-val
-    :initarg :start-val
-    :initform (error "Must supply a start value."))
+    :initform nil)
    (end-val
     :accessor end-val
     :initarg :end-val
     :initform (error "Must supply an end value."))
-   (effector
-    :initarg :effector
-    :initform (error "Must supply an effector function"))))
+   (target
+    :initarg :target
+    :initform (error "Must have a target"))
+   (rounding
+    :initarg rounding
+    :initform t )
+   (accessor
+    :initarg :accessor
+    :initform (error "Must supply an accessor function"))))
 
 ;;; TWEEN-SEQ combines tweens to run one after another.
 
@@ -112,15 +116,20 @@
   (get-duration tween))
 
 (defmethod run-tween ((tween tween) time)
-  (with-slots (start-time duration ease-fn start-val end-val effector) tween
+  (with-slots (start-time duration rounding ease-fn start-val target end-val accessor) tween
     (when (>= time start-time)
-      (funcall effector
-               (+ start-val
-                  (funcall ease-fn
-                           start-time
-                           duration
-                           time
-                           (- end-val start-val)))))))
+      (when (null start-val)
+        (setf start-val (funcall accessor target)))
+      (let ((new-val
+              (+ start-val
+                 (funcall ease-fn
+                          start-time
+                          duration
+                          time
+                          (- end-val start-val)))))
+        (funcall (eval `(function (setf ,accessor)))
+                 (if rounding (round new-val) new-val)
+                 target)))))
 
 ;;; Interface implementations for TWEEN-SEQ
 
