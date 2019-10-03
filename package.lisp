@@ -21,9 +21,12 @@
    #:end-time
    #:add-to-group
    #:as-group
+   #:pause
+   #:animate
+
 
    ;; EASING FUNCTIONS
-   #:bouce-out
+   #:bounce-out
    #:cubic-in
    #:cubic-in-out
    #:cubic-out
