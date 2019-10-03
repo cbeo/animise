@@ -92,7 +92,7 @@
   (let-when (end (end-time tween))
             (>= time end)))
 
-(defun add-to-group (group tween &keys (offset 0))
+(defun add-to-group (group tween &key (offset 0))
   "Adds TWEEN to GROUP. If TWEEN is the first tween added to GROUP, then TWEEN'S
    start time becomes the GROUP'S start time and the OFFSET is ignored.
    Otherwise, TWEEN's start time is set to the start time of the GROUP modified
@@ -237,4 +237,4 @@
   (dolist (tween (members ob))
     (run-tween tween now)))
 
-;;; Sequencing operations
+
