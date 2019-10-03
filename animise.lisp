@@ -51,7 +51,7 @@
     :initarg :target
     :initform (error "Must have a target"))
    (rounding
-    :initarg rounding
+    :initarg :rounding
     :initform t )
    (setter)
    (accessor
@@ -85,6 +85,20 @@
     :type list)))
 
 ;;; Some functions that use the protocol defined by the generics
+
+(defun pause (duration &optional (start 0))
+  (make-instance 'tween :target (list 0) :start-time start :duration duration
+                 :accessor 'car :end-val duration :rounding nil))
+
+(defun animate (target acc end &key (start 0) (ease #'linear) (rounding t) (duration 1000))
+  (make-instance 'tween
+                 :target target
+                 :start-time start
+                 :accessor acc
+                 :end-val end
+                 :ease-fn ease
+                 :rounding rounding
+                 :duration duration))
 
 (defun in-sequence (t1 &rest tws)
   (let ((seq (make-instance 'tween-seq :tweens (cons t1 tws))))
@@ -238,7 +252,7 @@
   (loop :for tw :in (members ob) :minimizing (start-time tw)))
 
 (defmethod (setf start-time) (val (ob tween-group))
-  (unless (members ob) (error "Can't setf the start time on an empty group"))
+  (Unless (members ob) (error "Can't setf the start time on an empty group"))
   (let* ((old-start-time (start-time ob))
          (offset (- val old-start-time)))
     (dolist (tween (members ob))
