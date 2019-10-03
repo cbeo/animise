@@ -1,9 +1,9 @@
 ;;;; animise.asd
 
 (asdf:defsystem #:animise
-  :description "Describe animise here"
-  :author "Your Name <your.name@example.com>"
-  :license  "Specify license here"
+  :description "General Purpose Tweens"
+  :author "<thegoofist@protonmail.com>"
+  :license  "AGPLv3.0"
   :version "0.0.1"
   :serial t
   :depends-on (#:lettuce #:trivia)
