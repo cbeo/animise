@@ -33,7 +33,7 @@
 
 And here is what the above looks like
 
-#+ATTR_HTML: :width 300px
+#+attr_htmls: :width 300px
 [[.images/animise-eg-3.gif]]
 
 
