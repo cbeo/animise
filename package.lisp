@@ -15,7 +15,7 @@
    #:duration
    #:run-tween
 
-   ;; TWEEN FUNCTIONS
+   ;; TWEEN FUNCTIONS & Macros
    #:tween-finished-p
    #:in-sequence
    #:end-time
@@ -23,6 +23,10 @@
    #:as-group
    #:pause
    #:animate
+   #:animating
+   #:sequencing
+   #:pausing
+   #:grouping 
 
 
    ;; EASING FUNCTIONS

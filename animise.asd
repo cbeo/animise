@@ -9,4 +9,5 @@
   :depends-on (#:lettuce #:trivia)
   :components ((:file "package")
                (:file "easing")
-               (:file "animise")))
+               (:file "animise")
+               (:file "tweening")))
