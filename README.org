@@ -3,7 +3,7 @@
 
   /General purpose tweens and easing/ 
 
-  Animise is a small library that you may use to orchistrate any time-varying
+  Animise is a small library that you may use to orchestrate any time-varying
   numerical values. While animise is intended to be used as a general purpose
   [[https://en.wikipedia.org/wiki/Inbetweening][tweening]] solution for your Common Lisp projects, you could use it for other
   purposes as well (e.g. modulating audio signals).
@@ -33,6 +33,7 @@
 
 And here is what the above looks like
 
+#+ATTR_HTML: width="200px"
 [[.images/animise-eg-3.gif]]
 
 
