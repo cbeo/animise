@@ -8,7 +8,8 @@
   [[https://en.wikipedia.org/wiki/Inbetweening][tweening]] solution for your Common Lisp projects, you could use it for other
   purposes as well (e.g. modulating audio signals).
 
-  Here is a short example using animise to define an animated a box using SDL2
+  As a taste of the animise language, here is a snip from an [[https://github.com/thegoofist/animise-examples][example]] that
+  animates a box with SDL2:
 
   #+begin_src lisp
 ;; ... snip
