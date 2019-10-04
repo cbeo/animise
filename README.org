@@ -33,7 +33,7 @@
 
 And here is what the above looks like
 
-<img src="images/animise-eg-3.gif" width="272" height="223"/>
+<img src=".images/animise-eg-3.gif" width="272" height="223"/>
 
 
 
