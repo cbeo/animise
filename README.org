@@ -1,0 +1,38 @@
+
+* Animise
+
+  /General purpose tweens and easing/ 
+
+  Animise is a small library to define, compose, and sequence changes to number
+  values through time. Animise is intended to be used as a general purpose
+  [[https://en.wikipedia.org/wiki/Inbetweening][tweening]] solution for your Common Lisp projects.
+
+  Here is a short example using animise to define an animated a box using SDL2
+
+  #+begin_src lisp
+;; ... snip
+
+(let* ((rect (sdl2:make-rect 0 0 100 100))
+         (color (list 255 0 0 255))
+
+         (anim (sequencing (:loop-mode :looping :targeting rect)
+                 (pausing :for 200 :start (sdl2:get-ticks))
+                 (grouping (:with-duration 1200)
+                   (animating :linearly :the 'cadddr :of color :to 0)
+                   (animating :quading-out :the 'sdl2:rect-x :to 400)
+                   (animating :bouncing-out :the 'sdl2:rect-y :to 300))
+                 (grouping (:with-duration 1000)
+                   (animating :linearly :the 'cadddr :of color :to 255)
+                   (animating :elastically-out :the 'sdl2:rect-x :to 0))
+                 (animating :cubically-in-out :the 'sdl2:rect-y :to 0 :for 800))))
+
+ ;; ... snip
+  
+  #+end_src
+
+And here is what the above might looks like
+
+[[./images/animise-eg-3.gif]] 
+
+
+
