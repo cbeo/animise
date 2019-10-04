@@ -32,7 +32,6 @@
 
 And here is what the above might looks like
 
-[[./images/animise-eg-3.gif]] 
-
+[[.images/animise-eg-3.gif]]
 
 
