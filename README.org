@@ -37,4 +37,41 @@ And here is what the above looks like
 [[.images/animise-eg-3.gif]]
 
 
+*** Another example
 
+[[.images/eg1.gif]] 
+
+#+begin_src lisp
+
+  (let* ((rect (sdl2:make-rect 0 0 100 100))
+         (dur 2200)
+         (dur/3 (round (/ dur 3)))
+         (anim
+           (sequencing (:loop-mode :looping :targeting rect)
+             (grouping (:for dur)
+               ;; only the first member of a sequence needs a real start time
+               (animating :elastically-out :starting (sdl2:get-ticks) :the 'sdl2:rect-x :to 500)
+               (animating :quading-out :the 'sdl2:rect-height :to 20)
+               (animating :quading-out :the 'sdl2:rect-width :to 20))
+             (grouping (:for dur)
+               (animating :quading-out :the 'sdl2:rect-width :to 100)
+               (animating :quading-out :the 'sdl2:rect-height :to 100)
+               (animating :bouncing-out :the 'sdl2:rect-x :to 0))))
+         (other-anim
+           (sequencing (:targeting rect :loop-mode :looping)
+             ;; again, first member of a sequence
+             (animating :quading-in-out :the 'sdl2:rect-y :to 150 :for dur/3 :starting (sdl2:get-ticks))
+             (animating :quading-in-out :the 'sdl2:rect-y :to 0 :for dur/3))))
+
+#+end_src
+
+Then to update each of the animations `anim` and `other-anim`, the above calls
+
+#+begin_src lisp
+
+                   (animise:run-tween anim (sdl2:get-ticks))
+                   (animise:run-tween other-anim (sdl2:get-ticks))
+
+#+end_src
+
+before the start of the rendering step.
