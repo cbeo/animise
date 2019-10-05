@@ -11,6 +11,9 @@
   As a taste of the animise language, here is a snip from an [[https://github.com/thegoofist/animise-examples][example]] that
   animates a box with SDL2:
 
+(**NOTE**: These gifs are jumpier looking than the "real thing" - 
+my gif recorder makes chopy gifs I guess :()
+
   #+begin_src lisp
 ;; ... snip
 
