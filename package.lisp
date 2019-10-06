@@ -13,6 +13,7 @@
    ;; TWEEN PROTOCOL
    #:start-time
    #:duration
+   #:loop-mode
    #:run-tween
 
    ;; TWEEN FUNCTIONS & Macros
@@ -26,7 +27,7 @@
    #:animating
    #:sequencing
    #:pausing
-   #:grouping 
+   #:grouping
 
 
    ;; EASING FUNCTIONS
