@@ -17,19 +17,20 @@ my gif recorder makes chopy gifs I guess :()
   #+begin_src lisp
 ;; ... snip
 
-(let* ((rect (sdl2:make-rect 0 0 100 100))
+  (let* ((rect (sdl2:make-rect 0 0 100 100))
          (color (list 255 0 0 255))
 
          (anim (sequencing (:loop-mode :looping :targeting rect)
-                 (pausing :for 200 :start (sdl2:get-ticks))
-                 (grouping (:with-duration 1200)
-                   (animating :linearly :the 'cadddr :of color :to 0)
-                   (animating :quading-out :the 'sdl2:rect-x :to 400)
-                   (animating :bouncing-out :the 'sdl2:rect-y :to 300))
-                 (grouping (:with-duration 1000)
-                   (animating :linearly :the 'cadddr :of color :to 255)
-                   (animating :elastically-out :the 'sdl2:rect-x :to 0))
-                 (animating :cubically-in-out :the 'sdl2:rect-y :to 0 :for 800))))
+                 (pausing :for 200 :at (sdl2:get-ticks))
+                 (grouping (:for 1200)
+                   (animating :the 'cadddr :of color :to 0)
+                   (animating :the 'sdl2:rect-x :to 400 :by :quading-out)
+                   (animating :the 'sdl2:rect-y :to 300 :by :bouncing-out))
+                 (grouping (:for 1000)
+                   (animating  :the 'cadddr :of color :to 255)
+                   (animating :the 'sdl2:rect-x :to 0 :by #'elastic-out))
+                 (animating :the 'sdl2:rect-y :to 0 :for 800 :by :cubic-in-out))))
+
 
  ;; ... snip
   
@@ -50,21 +51,20 @@ And here is what the above looks like
          (dur 2200)
          (dur/3 (round (/ dur 3)))
          (anim
-           (sequencing (:loop-mode :looping :targeting rect)
+           (sequencing (:loop-mode :looping :targeting rect :at (sdl2:get-ticks))
              (grouping (:for dur)
-               ;; only the first member of a sequence needs a real start time
-               (animating :elastically-out :starting (sdl2:get-ticks) :the 'sdl2:rect-x :to 500)
-               (animating :quading-out :the 'sdl2:rect-height :to 20)
-               (animating :quading-out :the 'sdl2:rect-width :to 20))
+               (animating :by :springing-out  :the 'sdl2:rect-x :to 500)
+               (animating :by :quading-out :the 'sdl2:rect-height :to 20)
+               (animating :by :quading-out :the 'sdl2:rect-width :to 20))
              (grouping (:for dur)
-               (animating :quading-out :the 'sdl2:rect-width :to 100)
-               (animating :quading-out :the 'sdl2:rect-height :to 100)
-               (animating :bouncing-out :the 'sdl2:rect-x :to 0))))
+               (animating :by :quading-out :the 'sdl2:rect-width :to 100)
+               (animating :by :quading-out :the 'sdl2:rect-height :to 100)
+               (animating :by :bouncing-out :the 'sdl2:rect-x :to 0))))
          (other-anim
-           (sequencing (:targeting rect :loop-mode :looping)
-             ;; again, first member of a sequence
-             (animating :quading-in-out :the 'sdl2:rect-y :to 150 :for dur/3 :starting (sdl2:get-ticks))
-             (animating :quading-in-out :the 'sdl2:rect-y :to 0 :for dur/3))))
+           (sequencing (:targeting rect :loop-mode :looping :at (sdl2:get-ticks))
+             (animating :by :quading-in-out :the 'sdl2:rect-y :to 150 :for dur/3 )
+             (animating :by :quading-in-out :the 'sdl2:rect-y :to 0 :for dur/3))))
+
 
 #+end_src
 
