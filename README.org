@@ -41,7 +41,7 @@ And here is what the above looks like
 [[.images/animise-eg-3.gif]]
 
 
-*** Another example
+*** More Examples
 
 [[.images/eg1.gif]] 
 
@@ -78,3 +78,30 @@ Then to update each of the animations `anim` and `other-anim`, the above calls
 #+end_src
 
 before the start of the rendering step.
+
+[[.images/wavy.gif]] 
+
+The code is not quite as nice for this one, but not too bad:
+
+#+begin_src lisp
+
+  (let* ((animise::*duration* 1000)
+         (rects (loop :for y :from 0 :to 48
+                      :collect (sdl2:make-rect 1 (* y 8) 30 8)))
+
+         (out-anims  (apply #'as-group
+                            (loop :for (r . rest) :on rects
+                                  :collect (animating :the 'sdl2:rect-x
+                                                      :of r :to 620 :by :cubing-in-out
+                                                      :at (1+ (* 100 (length rest)))))))
+         (in-anims (apply #'as-group
+                          (loop :for (r . rest) :on rects
+                                :collect (animating :the 'sdl2:rect-x
+                                                    :of r :to 1 :by :cubing-in-out
+                                                    :at (1+ (* 100 (length rest)))))))
+         (anim (funcall #'in-sequence out-anims in-anims)))
+
+    (setf (loop-mode anim) :looping)
+
+
+#+end_src
