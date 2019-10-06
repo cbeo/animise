@@ -11,8 +11,8 @@
   As a taste of the animise language, here is a snip from an [[https://github.com/thegoofist/animise-examples][example]] that
   animates a box with SDL2:
 
-(**NOTE**: These gifs are jumpier looking than the "real thing" - 
-my gif recorder makes chopy gifs I guess :()
+  NOTE: These gifs are jumpier looking than the "real thing" - my gif recorder
+  makes chopy gifs I guess :(
 
   #+begin_src lisp
 ;; ... snip
@@ -43,65 +43,69 @@ And here is what the above looks like
 
 *** More Examples
 
-[[.images/eg1.gif]] 
+**** Animating a few distinct properties at different "rates"
 
-#+begin_src lisp
+ [[.images/eg1.gif]] 
 
-  (let* ((rect (sdl2:make-rect 0 0 100 100))
-         (dur 2200)
-         (dur/3 (round (/ dur 3)))
-         (anim
-           (sequencing (:loop-mode :looping :targeting rect :at (sdl2:get-ticks))
-             (grouping (:for dur)
-               (animating :by :springing-out  :the 'sdl2:rect-x :to 500)
-               (animating :by :quading-out :the 'sdl2:rect-height :to 20)
-               (animating :by :quading-out :the 'sdl2:rect-width :to 20))
-             (grouping (:for dur)
-               (animating :by :quading-out :the 'sdl2:rect-width :to 100)
-               (animating :by :quading-out :the 'sdl2:rect-height :to 100)
-               (animating :by :bouncing-out :the 'sdl2:rect-x :to 0))))
-         (other-anim
-           (sequencing (:targeting rect :loop-mode :looping :at (sdl2:get-ticks))
-             (animating :by :quading-in-out :the 'sdl2:rect-y :to 150 :for dur/3 )
-             (animating :by :quading-in-out :the 'sdl2:rect-y :to 0 :for dur/3))))
+ #+begin_src lisp
 
-
-#+end_src
-
-Then to update each of the animations `anim` and `other-anim`, the above calls
-
-#+begin_src lisp
-
-                   (animise:run-tween anim (sdl2:get-ticks))
-                   (animise:run-tween other-anim (sdl2:get-ticks))
-
-#+end_src
-
-before the start of the rendering step.
-
-[[.images/wavy.gif]] 
-
-The code is not quite as nice for this one, but not too bad:
-
-#+begin_src lisp
-
-  (let* ((animise::*duration* 1000)
-         (rects (loop :for y :from 0 :to 48
-                      :collect (sdl2:make-rect 1 (* y 8) 30 8)))
-
-         (out-anims  (apply #'as-group
-                            (loop :for (r . rest) :on rects
-                                  :collect (animating :the 'sdl2:rect-x
-                                                      :of r :to 620 :by :cubing-in-out
-                                                      :at (1+ (* 100 (length rest)))))))
-         (in-anims (apply #'as-group
-                          (loop :for (r . rest) :on rects
-                                :collect (animating :the 'sdl2:rect-x
-                                                    :of r :to 1 :by :cubing-in-out
-                                                    :at (1+ (* 100 (length rest)))))))
-         (anim (funcall #'in-sequence out-anims in-anims)))
-
-    (setf (loop-mode anim) :looping)
+   (let* ((rect (sdl2:make-rect 0 0 100 100))
+          (dur 2200)
+          (dur/3 (round (/ dur 3)))
+          (anim
+            (sequencing (:loop-mode :looping :targeting rect :at (sdl2:get-ticks))
+              (grouping (:for dur)
+                (animating :by :springing-out  :the 'sdl2:rect-x :to 500)
+                (animating :by :quading-out :the 'sdl2:rect-height :to 20)
+                (animating :by :quading-out :the 'sdl2:rect-width :to 20))
+              (grouping (:for dur)
+                (animating :by :quading-out :the 'sdl2:rect-width :to 100)
+                (animating :by :quading-out :the 'sdl2:rect-height :to 100)
+                (animating :by :bouncing-out :the 'sdl2:rect-x :to 0))))
+          (other-anim
+            (sequencing (:targeting rect :loop-mode :looping :at (sdl2:get-ticks))
+              (animating :by :quading-in-out :the 'sdl2:rect-y :to 150 :for dur/3 )
+              (animating :by :quading-in-out :the 'sdl2:rect-y :to 0 :for dur/3))))
 
 
-#+end_src
+ #+end_src
+
+ Then to update each of the animations ~anim~ and ~other-anim~, the above calls
+
+ #+begin_src lisp
+
+                    (animise:run-tween anim (sdl2:get-ticks))
+                    (animise:run-tween other-anim (sdl2:get-ticks))
+
+ #+end_src
+
+ before the start of the rendering step.
+
+**** Making batches of animations to run
+
+ [[.images/wavy.gif]] 
+
+ The code is not quite as nice for this one, but not too bad:
+
+ #+begin_src lisp
+
+   (let* ((animise::*duration* 1000)
+          (rects (loop :for y :from 0 :to 48
+                       :collect (sdl2:make-rect 1 (* y 8) 30 8)))
+
+          (out-anims  (apply #'as-group
+                             (loop :for (r . rest) :on rects
+                                   :collect (animating :the 'sdl2:rect-x
+                                                       :of r :to 620 :by :cubing-in-out
+                                                       :at (1+ (* 100 (length rest)))))))
+          (in-anims (apply #'as-group
+                           (loop :for (r . rest) :on rects
+                                 :collect (animating :the 'sdl2:rect-x
+                                                     :of r :to 1 :by :cubing-in-out
+                                                     :at (1+ (* 100 (length rest)))))))
+          (anim (funcall #'in-sequence out-anims in-anims)))
+
+     (setf (loop-mode anim) :looping)
+
+
+ #+end_src
