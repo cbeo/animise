@@ -56,7 +56,11 @@
    (setter)
    (accessor
     :initarg :accessor
-    :initform (error "Must supply an accessor function"))))
+    :initform (error "Must supply an accessor function"))
+   (on-complete
+    :accessor on-complete
+    :initarg :on-complete
+    :initform nil)))
 
 (defmethod initialize-instance :after ((tween tween) &key)
   (with-slots (getter setter accessor) tween
@@ -150,6 +154,11 @@
         (funcall setter
                  (if rounding (round new-val) new-val)
                  target)))))
+
+(defmethod run-tween :after ((tween tween) time)
+  (when (and (on-complete tween) (tween-finished-p tween time))
+    (funcall (on-complete tween))
+    (setf (on-complete tween) nil)))
 
 ;;; Interface implementations for TWEEN-SEQ
 
