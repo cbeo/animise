@@ -58,7 +58,7 @@
     ((:sine-in-out  :sinusoidal-in-out) #'sinusoidal-in-out)
     ((:sine-out :sinusoidal-out ) #'sinusoidal-out)))
 
-(defun animating (&key (by :none) the of to for at)
+(defun animating (&key (by :none) the of to for at before)
   "A wrapper around ANIMATE that is aware of any default values defined in the
    the most recently enclosing form.
 
@@ -88,6 +88,7 @@
            the
            to
            :start (or at (when-bound *start-time*) 0)
+           :on-complete before
            :ease (if (functionp by) by (keyword->ease-fn by))
            :duration (or for (when-bound *duration*) 0)))
 

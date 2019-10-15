@@ -94,7 +94,12 @@
   (make-instance 'tween :target (list 0) :start-time start :duration duration
                  :accessor 'car :end-val duration :rounding nil))
 
-(defun animate (target acc end &key (start 0) (ease #'linear) (rounding t) (duration 1000))
+(defun animate (target acc end &key
+                                 (start 0)
+                                 (ease #'linear)
+                                 (rounding t)
+                                 on-complete
+                                 (duration 1000) )
   (make-instance 'tween
                  :target target
                  :start-time start
@@ -102,6 +107,7 @@
                  :end-val end
                  :ease-fn ease
                  :rounding rounding
+                 :on-complete on-complete
                  :duration duration))
 
 (defun in-sequence (t1 &rest tws)
