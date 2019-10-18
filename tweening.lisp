@@ -25,6 +25,10 @@
          (setf (loop-mode ,this-seq) ',loop-mode)
          ,this-seq))))
 
+(defun take-action (action &key (delay 20) (at 0))
+  (let ((anim (pause delay at)))
+    (setf (on-complete anim) action)
+    anim))
 
 (defun pausing (&key for at)
   "A light wrapper around PAUSE. Is aware of default parameters that may have

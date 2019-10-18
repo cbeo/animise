@@ -12,6 +12,7 @@
 
    ;; TWEEN PROTOCOL
    #:start-time
+   #:on-complete
    #:duration
    #:loop-mode
    #:run-tween
@@ -28,7 +29,7 @@
    #:sequencing
    #:pausing
    #:grouping
-
+   #:take-action
 
    ;; EASING FUNCTIONS
    #:bounce-out

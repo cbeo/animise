@@ -248,12 +248,19 @@
       ;;    (reverse-tween seq)
       ;;    (car (tweens seq)))))))
 
+(defun has-on-complete (thing)
+  (and (typep thing 'tween)
+       (on-complete thing)))
 
 (defmethod run-tween ((ob tween-seq) time)
   (let-when (tween (or
                     ;; find the first unfinished tween in the sequence
                     (find-if-not (lambda (tween)
-                                   (tween-finished-p tween time))
+                                   (when (tween-finished-p tween time)
+                                     (when (has-on-complete tween)
+                                       (funcall (on-complete tween))
+                                       (setf (on-complete tween) nil))
+                                     t))
                                  (tweens ob))
                     ;; otherwise apply any looping configuration on the sequence
                     ;; and apply the tween that results
