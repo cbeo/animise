@@ -1,8 +1,10 @@
 ;;;; package.lisp
 
 (defpackage #:animise
-  (:use #:cl #:lettuce)
+  (:use #:cl)
   (:import-from #:trivia #:match)
+  (:import-from #:alexandria
+                #:when-let)
   (:export
 
    ;; TWEEN CLASSES

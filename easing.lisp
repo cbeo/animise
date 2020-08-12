@@ -6,7 +6,7 @@
 
 (defun time-frac (start duration current)
   (let* ((end (+ start duration))
-        (progress (max 0 (- end current))))
+         (progress (max 0 (- end current))))
     (- 1.0 (/ progress duration))))
 
 (defmacro def-ease (name &rest body)

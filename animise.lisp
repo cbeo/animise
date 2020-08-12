@@ -111,6 +111,7 @@
                  :duration duration))
 
 (defun in-sequence (t1 &rest tws)
+  "Run the provided tweens one after the other"
   (let ((seq (make-instance 'tween-seq :tweens (cons t1 tws))))
     (correct-sequencing seq)
     seq))
@@ -118,12 +119,12 @@
 (defun end-time (tween)
   "Some tweens dont have a duration ,and hence never end. NIL is returned to
   reflect this."
-  (let-when (dur (duration tween))
+  (when-let (dur (duration tween))
             (+ (start-time tween) dur)))
 
 (defun tween-finished-p (tween time)
   "Returns T if  TWEEN is done running."
-  (let-when (end (end-time tween))
+  (when-let (end (end-time tween))
             (>= time end)))
 
 (defun add-to-group (group tween &key (offset 0))
@@ -131,13 +132,16 @@
    start time becomes the GROUP'S start time and the OFFSET is ignored.
    Otherwise, TWEEN's start time is set to the start time of the GROUP modified
    by OFFSET."
-  (let-when (start-time (and (members group) (start-time group)))
+  (when-let (start-time (and (members group) (start-time group)))
     (setf (start-time tween)
           (+ offset start-time)))
   (push (members group) tween))
 
 
 (defun as-group (tween &rest tweens)
+  "run the provided tweens in paralell (not actually, but
+   logically). That is, tweens in this group can be updated at the same
+   time."
   (make-instance 'tween-group :members (cons tween tweens)))
 
 ;;; Interface implementations for TWEEN class
@@ -253,7 +257,7 @@
        (on-complete thing)))
 
 (defmethod run-tween ((ob tween-seq) time)
-  (let-when (tween (or
+  (when-let (tween (or
                     ;; find the first unfinished tween in the sequence
                     (find-if-not (lambda (tween)
                                    (when (tween-finished-p tween time)

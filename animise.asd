@@ -6,7 +6,7 @@
   :license  "AGPLv3.0"
   :version "0.0.1"
   :serial t
-  :depends-on (#:lettuce #:trivia)
+  :depends-on (#:trivia #:alexandria)
   :components ((:file "package")
                (:file "easing")
                (:file "animise")
